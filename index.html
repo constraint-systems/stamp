@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,shrink-to-fit=no"
+    />
+    <title>Stamp</title>
+    <style type="text/css">
+      :root {
+        --bg: #282828;
+        --fg: #ebdbb2;
+        --red: #cc241d;
+        --green: #98971a;
+        --yellow: #d79921;
+        --blue: #458588;
+        --purple: #b16286;
+        --aqua: #689d68;
+        --gray: #a89984;
+        --black: #1d2021;
+      }
+      html,
+      body {
+        padding: 0;
+        margin: 0;
+        font-family: 'JetBrains Mono', 'Consolas', 'Andale Mono WT',
+          'Andale Mojo', 'Lucida Console', 'Lucida Sans Typewriter',
+          'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Liberation Mono',
+          'Nimbus Mono L', Monaco, 'Courier New', Courier, monospace;
+        font-size: 12px;
+        line-height: 16px;
+        background: var(--bg);
+        color: var(--gray);
+        padding-left: 4px;
+        padding-right: 4px;
+        user-select: none;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      img,
+      canvas {
+        display: block;
+        position: relative;
+      }
+      .flex {
+        display: flex;
+      }
+      .titlebar {
+        color: var(--gray);
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+      .titlebar.active {
+        background: var(--gray);
+        color: var(--bg);
+      }
+      .modeholder button {
+        min-width: 16px;
+      }
+      .modeholder button.active {
+        background: var(--gray);
+        color: var(--bg);
+      }
+      p {
+        margin: 0;
+        text-indent: 8px;
+      }
+      key {
+        background: var(--black);
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+      button {
+        font-size: inherit;
+        line-height: inherit;
+        border: none;
+        padding: 0;
+        margin: 0;
+        background: var(--black);
+        padding-left: 4px;
+        padding-right: 4px;
+        color: var(--gray);
+      }
+      a {
+        color: var(--yellow);
+      }
+      #infobarref {
+        cursor: move;
+      }
+      #keyboard button {
+        height: 56px;
+        line-height: 56px;
+        text-align: center;
+        border: solid 1px var(--gray);
+        background: var(--black);
+        color: var(--fg);
+        font-size: 18px;
+      }
+      #keyboard button.active {
+        background: var(--gray);
+        color: var(--bg);
+      }
+    </style>
+  </head>
+  <body>
+    <input type="file" id="fileinputref" style="display: none;" />
+    <div style="margin: 0 auto;">
+      <div class="flex" style="flex-wrap: wrap">
+        <div style="margin-right: 16px;">
+          <button>o</button> load image (or paste or drop)
+        </div>
+        <div><button>p</button> save canvas as png</div>
+      </div>
+      <div class="flex" style="flex-wrap: wrap">
+        <div>
+          <div id="canvastitleref" class="titlebar">canvas</div>
+          <div id="ccholderref" style="position: relative">
+            <div id="checkerref"></div>
+            <canvas id="ccref"></canvas>
+            <canvas id="mccref"></canvas>
+          </div>
+        </div>
+        <div>
+          <div id="sourcetitleref" class="titlebar">palette</div>
+          <div id="ocholderref" style="position: relative">
+            <canvas id="ocref"></canvas>
+            <canvas id="mocref"></canvas>
+          </div>
+        </div>
+      </div>
+      <div id="readref" class="flex" style="justify-content: space-between">
+        <div class="flex">
+          <div id="modeholderref" class="modeholder flex">
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>r</button>
+          </div>
+          <div id="sizeref" style="margin-left: 8px;"></div>
+        </div>
+        <div class="flex">
+          <div id="csreadref" style="margin-left: 8px;"></div>
+          <div id="osreadref" style="margin-left: 8px;"></div>
+          <div id="sizereadref" style="margin-left: 8px;"></div>
+          <div id="dividereadref" style="margin-left: 8px;"></div>
+          <button
+            id="infobuttonref"
+            style="margin-left: 8px; min-width: 16px; text-align: center;"
+          >
+            ?
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="inforef"
+      style="position: absolute; left: 32px; top: 56px; width: 320px; outline: solid 1px var(--gray); background: var(--bg);"
+    >
+      <div class="titlebar active flex" style="">
+        <div id="infobarref" style="flex-grow: 1">
+          Info
+        </div>
+        <div>
+          x
+        </div>
+      </div>
+      <div
+        style="padding-left: 4px; padding-right: 4px; color: var(--fg); user-select: text;"
+      >
+        <p>
+          Stamp is a keyboard-driven paint-from-image program.
+        </p>
+        <p>
+          Use <button>h</button><button>j</button><button>k</button
+          ><button>l</button> or <button>←</button><button>↓</button
+          ><button>↑</button><button>→</button> to move your cursor. Use
+          <button>d</button> to copy from the palette to the canvas and
+          <button>e</button> to erase.
+        </p>
+        <p>
+          In mode <button>1</button> the canvas and palette cursor move
+          together. In mode <button>2</button> only the canvas cursor moves, in
+          mode <button>3</button>
+          only the palette cursor.
+        </p>
+        <p>
+          <button>r</button> mode lets you resize the cursor. If you resize to a
+          larger cursor, you will move by that cursor size by default. To
+          instead move one cell at a time hold <button>shift</button>.
+        </p>
+        <p>
+          By default each cell is rendered at 16x16 pixels. Use
+          <button>-</button> to halve the resolution, going all the way down to
+          1 pixel per cell. Use <button>+</button> to move it back up.
+        </p>
+        <p>
+          Use <button>z</button> to undo paint/erase and
+          <button>shift + z</button> to redo it.
+        </p>
+        <p>
+          A <a href="#">constraint.systems</a> project.
+          <a href="#">View source</a>
+        </p>
+      </div>
+    </div>
+
+    <div
+      id="keyboard"
+      style="position: fixed; left: 16px; bottom: 16px; right: 16px; display: grid; grid-template-columns: repeat(6, 1fr);"
+    >
+      <button>←</button>
+      <button>→</button>
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>r</button>
+      <button>↑</button>
+      <button>↓</button>
+      <button>o</button>
+      <button>p</button>
+      <button>d</button>
+      <button>e</button>
+      <button>+</button>
+      <button>-</button>
+      <button>z</button>
+      <button>?</button>
+      <button id="keyboard_shiftref" style="grid-column: span 2">sh</button>
+    </div>
+  </body>
+  <script src="app.js"></script>
+</html>

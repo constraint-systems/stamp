@@ -1,0 +1,15 @@
+{
+  "name": "raw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "reload"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "reload": "^3.0.4"
+  }
+}
