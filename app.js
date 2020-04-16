@@ -736,9 +736,9 @@ window.addEventListener('load', () => {
         state.km[key] = false
         button_state.repeat_check = false
         clearInterval(button_state.interval)
-        window.removeEventListener('touchend', handleEnd)
+        $button.removeEventListener('touchend', handleEnd)
       }
-      window.addEventListener('touchend', handleEnd)
+      $button.addEventListener('touchend', handleEnd)
       // prevent default prevents all mouse events
       e.preventDefault()
       e.stopPropagation()
