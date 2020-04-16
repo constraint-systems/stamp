@@ -705,8 +705,9 @@ window.addEventListener('load', () => {
 
   let $buttons = document.querySelectorAll('button')
   $buttons.forEach(function($button) {
-    let interval
-    let repeat_check = false
+    let button_state = {}
+    button_state.interval = null
+    button_state.repeat_check = false
 
     $button.addEventListener('touchstart', function(e) {
       let key = getButtonKey(this)
@@ -723,20 +724,21 @@ window.addEventListener('load', () => {
         state.km[key] = true
         keyAction(key, { shiftKey: false })
         setTimeout(() => {
-          if (repeat_check) {
-            interval = setInterval(() => {
+          if (button_state.repeat_check) {
+            button_state.interval = setInterval(() => {
               keyAction(key, { shiftKey: false })
             }, 100)
           }
         }, 300)
-        repeat_check = true
+        button_state.repeat_check = true
       }
-      window.addEventListener('touchend', function() {
-        console.log('touchend')
+      function handleEnd() {
         state.km[key] = false
-        repeat_check = false
-        clearInterval(interval)
-      })
+        button_state.repeat_check = false
+        clearInterval(button_state.interval)
+        window.removeEventListener('touchend', handleEnd)
+      }
+      window.addEventListener('touchend', handleEnd)
       // prevent default prevents all mouse events
       e.preventDefault()
       e.stopPropagation()
@@ -757,19 +759,22 @@ window.addEventListener('load', () => {
         state.km[key] = true
         keyAction(key, { shiftKey: false })
         setTimeout(() => {
-          if (repeat_check) {
-            interval = setInterval(function() {
+          if (button_state.repeat_check) {
+            button_state.interval = setInterval(function() {
               keyAction(key, { shiftKey: false })
             }, 50)
           }
         }, 300)
-        repeat_check = true
+        button_state.repeat_check = true
       }
-      window.addEventListener('mouseup', function() {
+      function handleUp() {
         state.km[key] = false
-        repeat_check = false
-        clearInterval(interval)
-      })
+        button_state.repeat_check = false
+        clearInterval(button_state.interval)
+        window.removeEventListener('touchend', handleUp)
+      }
+
+      window.addEventListener('mouseup', handleUp)
     })
   })
 })
