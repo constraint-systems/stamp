@@ -727,7 +727,7 @@ window.addEventListener('load', () => {
           if (button_state.repeat_check) {
             button_state.interval = setInterval(() => {
               keyAction(key, { shiftKey: false })
-            }, 100)
+            }, 50)
           }
         }, 300)
         button_state.repeat_check = true
@@ -737,7 +737,9 @@ window.addEventListener('load', () => {
         button_state.repeat_check = false
         clearInterval(button_state.interval)
         $button.removeEventListener('touchend', handleEnd)
+        $button.removeEventListener('touchcancel', handleEnd)
       }
+      $button.addEventListener('touchcancel', handleEnd)
       $button.addEventListener('touchend', handleEnd)
       // prevent default prevents all mouse events
       e.preventDefault()
