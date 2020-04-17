@@ -21,6 +21,18 @@ function px(value) {
 }
 
 window.addEventListener('load', () => {
+  let dpr = window.devicePixelRatio || 1
+
+  function setUpCanvas(c, width, height) {
+    c.width = width * dpr
+    c.height = height * dpr
+    c.style.width = px(width)
+    c.style.height = px(height)
+    let cx = c.getContext('2d')
+    cx.scale(dpr, dpr)
+    return cx
+  }
+
   function $(id) {
     return document.getElementById(id + 'ref')
   }
@@ -73,9 +85,7 @@ window.addEventListener('load', () => {
 
   // set checker background
   let checker = document.createElement('canvas')
-  checker.width = size * 2
-  checker.height = size * 2
-  let checkerx = checker.getContext('2d')
+  let checkerx = setUpCanvas(checker, size * 2, size * 2)
   checkerx.fillStyle = '#fff'
   checkerx.fillRect(0, 0, checker.width, checker.height)
   checkerx.fillStyle = '#ddd'
@@ -85,6 +95,7 @@ window.addEventListener('load', () => {
   $checker.style.cssText =
     'position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;'
   $checker.style.backgroundImage = 'url(' + checker_image + ')'
+  $checker.style.backgroundSize = px(size * 2) + ' ' + px(size * 2)
 
   function loadImage(src) {
     let ww = window.innerWidth - size * 1
@@ -130,20 +141,17 @@ window.addEventListener('load', () => {
 
       $ccholder.style.width = px(iwidth)
       $ccholder.parentNode.style.width = px(iwidth)
-      $cc.width = iwidth
-      $cc.height = iheight
+      setUpCanvas($cc, iwidth, iheight)
+
       $mcc.style.position = 'absolute'
       $mcc.style.left = px(-4)
       $mcc.style.top = px(-4)
-      $mcc.width = iwidth + 8
-      $mcc.height = iheight + 8
-      let mccx = $mcc.getContext('2d')
+      let mccx = setUpCanvas($mcc, iwidth + 8, iheight + 8)
       mccx.translate(4, 4)
 
       $ocholder.style.width = px(iwidth)
       $ocholder.parentNode.style.width = px(iwidth)
-      $oc.width = iwidth
-      $oc.height = iheight
+      setUpCanvas($oc, iwidth, iheight)
       ocx.drawImage(
         img,
         0,
@@ -152,15 +160,13 @@ window.addEventListener('load', () => {
         img.height,
         0,
         0,
-        $oc.width,
-        $oc.height
+        $oc.width / dpr,
+        $oc.height / dpr
       )
       $moc.style.position = 'absolute'
       $moc.style.left = px(-4)
       $moc.style.top = px(-4)
-      $moc.width = iwidth + 8
-      $moc.height = iheight + 8
-      let mocx = $moc.getContext('2d')
+      let mocx = setUpCanvas($moc, iwidth + 8, iheight + 8)
       mocx.translate(4, 4)
 
       // reset history
@@ -210,16 +216,18 @@ window.addEventListener('load', () => {
     if (state.divide === 1) {
       ccx.drawImage(
         $oc,
-        ...state.os.map(v => v * size),
+        ...state.os.map(v => v * (size * dpr)),
         ...state.cs.map(v => v * size)
       )
     } else {
-      $tc.width = (16 / state.divide) * state.cs[2]
-      $tc.height = (16 / state.divide) * state.cs[3]
-      let tcx = $tc.getContext('2d')
+      let tcx = setUpCanvas(
+        $tc,
+        (16 / state.divide) * state.cs[2],
+        (16 / state.divide) * state.cs[3]
+      )
       tcx.drawImage(
         $oc,
-        ...state.os.map(v => v * size),
+        ...state.os.map(v => v * size * dpr),
         0,
         0,
         $tc.width,
@@ -259,8 +267,8 @@ window.addEventListener('load', () => {
     os_check[0] += x
     os_check[1] += y
 
-    let cols = $oc.width / size
-    let rows = $oc.height / size
+    let cols = $oc.width / (size * dpr)
+    let rows = $oc.height / (size * dpr)
 
     function checkBounds(cursor) {
       return (
@@ -299,8 +307,8 @@ window.addEventListener('load', () => {
     let cs = state.cs
     let os = state.os
 
-    let cols = $oc.width / size
-    let rows = $oc.height / size
+    let cols = $oc.width / (size * dpr)
+    let rows = $oc.height / (size * dpr)
 
     let cs_check = cs.slice()
     cs_check[2] += x
@@ -316,7 +324,9 @@ window.addEventListener('load', () => {
       cs_check[1] + cs_check[3] > 0 &&
       cs_check[1] < cols &&
       cs_check[2] <= cols &&
-      cs_check[3] <= rows
+      cs_check[3] <= rows &&
+      cs_check[2] > 0 &&
+      cs_check[3] > 0
 
     let os_clear =
       os_check[0] + os_check[2] > 0 &&
@@ -324,7 +334,9 @@ window.addEventListener('load', () => {
       os_check[1] + os_check[3] > 0 &&
       os_check[1] < cols &&
       os_check[2] <= cols &&
-      os_check[3] <= rows
+      os_check[3] <= rows &&
+      os_check[2] > 0 &&
+      os_check[3] > 0
 
     if (cs_clear && os_clear) {
       state.cs[2] += x
