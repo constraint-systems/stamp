@@ -5,7 +5,8 @@
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "reload"
+    "dev": "reload",
+    "deploy": "next build && next export && touch out/.nojekyll && touch out/CNAME && echo \"stamp.constraint.systems\" >> out/CNAME && git add out/ && git commit -m \"Deploy to gh-pages\" && git subtree push --prefix out origin gh-pages"
   },
   "author": "",
   "license": "ISC",
