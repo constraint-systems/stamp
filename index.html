@@ -73,6 +73,7 @@
         padding-right: 4px;
       }
       button {
+        font-family: inherit;
         font-size: inherit;
         line-height: inherit;
         border: none;
@@ -101,6 +102,9 @@
       #keyboard button.active {
         background: var(--gray);
         color: var(--bg);
+      }
+      #inforef button {
+        user-select: text;
       }
     </style>
   </head>
@@ -163,9 +167,9 @@
         <div id="infobarref" style="flex-grow: 1">
           Info
         </div>
-        <div>
+        <button style="background: var(--gray); color: var(--bg);">
           x
-        </div>
+        </button>
       </div>
       <div
         style="padding-left: 4px; padding-right: 4px; color: var(--fg); user-select: text;"
@@ -201,8 +205,14 @@
           <button>shift + z</button> to redo it.
         </p>
         <p>
-          A <a href="#">constraint.systems</a> project.
-          <a href="#">View source</a>
+          A
+          <a target="_blank" href="https://constraint.systems"
+            >constraint.systems</a
+          >
+          project.
+          <a target="_blank" href="https://github.com/constraint-systems/stamp"
+            >View source</a
+          >
         </p>
       </div>
     </div>

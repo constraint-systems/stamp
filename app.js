@@ -73,13 +73,20 @@ window.addEventListener('load', () => {
   state.history.index = null
 
   let info_state = {}
-  info_state.active = false
-  info_state.position = [window.innerWidth - 320 - 16, 56]
+  info_state.active = true
+  if (window.innerWidth > 500) {
+    info_state.width = 320
+    info_state.position = [window.innerWidth - 320 - 16, 56]
+  } else {
+    info_state.width = window.innerWidth - 24 * 2
+    info_state.position = [24, 56]
+  }
 
   function setInfo() {
     $info.style.display = info_state.active ? 'block' : 'none'
     $info.style.left = px(info_state.position[0])
     $info.style.top = px(info_state.position[1])
+    $info.style.width = px(info_state.width)
   }
   setInfo()
 
@@ -220,11 +227,10 @@ window.addEventListener('load', () => {
         ...state.cs.map(v => v * size)
       )
     } else {
-      let tcx = setUpCanvas(
-        $tc,
-        (16 / state.divide) * state.cs[2],
-        (16 / state.divide) * state.cs[3]
-      )
+      // tc is special case no dpr adjust
+      $tc.width = (16 / state.divide) * state.cs[2]
+      $tc.height = (16 / state.divide) * state.cs[3]
+      let tcx = $tc.getContext('2d')
       tcx.drawImage(
         $oc,
         ...state.os.map(v => v * size * dpr),
