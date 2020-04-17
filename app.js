@@ -704,13 +704,16 @@ window.addEventListener('load', () => {
   keyboard_state.shift = false
 
   let $buttons = document.querySelectorAll('button')
+  let button_repeats = {}
+
   $buttons.forEach(function($button) {
     let button_state = {}
     button_state.interval = null
-    button_state.repeat_check = false
+    let key = getButtonKey($button)
+    button_repeats[key] = false
 
     $button.addEventListener('touchstart', function(e) {
-      let key = getButtonKey(this)
+      button_repeats[key] = true
       // keyboard shift special case
       if (key === 'sh') {
         if (keyboard_state.shift === true) {
@@ -724,17 +727,17 @@ window.addEventListener('load', () => {
         state.km[key] = true
         keyAction(key, { shiftKey: false })
         setTimeout(() => {
-          if (button_state.repeat_check) {
+          if (button_repeats[key]) {
             button_state.interval = setInterval(() => {
               keyAction(key, { shiftKey: false })
-            }, 50)
+            }, 75)
           }
         }, 300)
-        button_state.repeat_check = true
+        button_repeats[key] = true
       }
       function handleEnd() {
         state.km[key] = false
-        button_state.repeat_check = false
+        button_repeats[key] = false
         clearInterval(button_state.interval)
         $button.removeEventListener('touchend', handleEnd)
         $button.removeEventListener('touchcancel', handleEnd)
