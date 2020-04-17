@@ -708,12 +708,15 @@ window.addEventListener('load', () => {
   let repeat_check = null
   let button_repeats = {}
 
+  let touch = { current: false }
+
   $buttons.forEach(function($button) {
     let button_state = {}
     button_state.interval = null
     let key = getButtonKey($button)
 
     $button.addEventListener('touchstart', function(e) {
+      touch.current = true
       // keyboard shift special case
       if (key === 'sh') {
         if (keyboard_state.shift === true) {
@@ -724,18 +727,26 @@ window.addEventListener('load', () => {
           $keyboard_shift.classList.add('active')
         }
       } else {
+        repeat_check = null
         state.km[key] = true
         keyAction(key, { shiftKey: false })
         setTimeout(() => {
           if (repeat_check === key) {
             button_state.interval = setInterval(() => {
-              keyAction(key, { shiftKey: false })
+              if (repeat_check === key) {
+                keyAction(key, { shiftKey: false })
+              } else {
+                clearInterval(button_state.interval)
+              }
             }, 75)
           }
         }, 300)
         repeat_check = key
       }
       function handleEnd() {
+        setTimeout(() => {
+          touch.current = false
+        }, 400)
         state.km[key] = false
         if (repeat_check === key) repeat_check = null
         clearInterval(button_state.interval)
@@ -744,42 +755,44 @@ window.addEventListener('load', () => {
       }
       $button.addEventListener('touchcancel', handleEnd)
       $button.addEventListener('touchend', handleEnd)
+
       // prevent default prevents all mouse events
       e.preventDefault()
       e.stopPropagation()
     })
 
     $button.addEventListener('mousedown', function() {
-      let key = getButtonKey(this)
-      // keyboard shift special case
-      if (key === 'sh') {
-        if (keyboard_state.shift === true) {
-          keyboard_state.shift = false
-          $keyboard_shift.classList.remove('active')
-        } else {
-          keyboard_state.shift = true
-          $keyboard_shift.classList.add('active')
-        }
-      } else {
-        state.km[key] = true
-        keyAction(key, { shiftKey: false })
-        setTimeout(() => {
-          if (button_state.repeat_check) {
-            button_state.interval = setInterval(function() {
-              keyAction(key, { shiftKey: false })
-            }, 50)
+      if (!touch.current) {
+        let key = getButtonKey(this)
+        // keyboard shift special case
+        if (key === 'sh') {
+          if (keyboard_state.shift === true) {
+            keyboard_state.shift = false
+            $keyboard_shift.classList.remove('active')
+          } else {
+            keyboard_state.shift = true
+            $keyboard_shift.classList.add('active')
           }
-        }, 300)
-        button_state.repeat_check = true
+        } else {
+          state.km[key] = true
+          keyAction(key, { shiftKey: false })
+          setTimeout(() => {
+            if (button_state.repeat_check) {
+              button_state.interval = setInterval(function() {
+                keyAction(key, { shiftKey: false })
+              }, 50)
+            }
+          }, 300)
+          button_state.repeat_check = true
+        }
+        function handleUp() {
+          state.km[key] = false
+          button_state.repeat_check = false
+          clearInterval(button_state.interval)
+          window.removeEventListener('touchend', handleUp)
+        }
+        window.addEventListener('mouseup', handleUp)
       }
-      function handleUp() {
-        state.km[key] = false
-        button_state.repeat_check = false
-        clearInterval(button_state.interval)
-        window.removeEventListener('touchend', handleUp)
-      }
-
-      window.addEventListener('mouseup', handleUp)
     })
   })
 })
