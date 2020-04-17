@@ -719,7 +719,7 @@ window.addEventListener('load', () => {
   })
 
   function getButtonKey($button) {
-    let key = $button.innerText
+    let key = $button.innerText.trim()
     let map = {
       '←': 'arrowleft',
       '↓': 'arrowdown',
