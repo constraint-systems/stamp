@@ -90,7 +90,7 @@
       #infobarref {
         cursor: move;
       }
-      #keyboard button {
+      #keyboardref button {
         height: 56px;
         line-height: 56px;
         text-align: center;
@@ -99,12 +99,17 @@
         color: var(--fg);
         font-size: 18px;
       }
-      #keyboard button.active {
+      #keyboardref button.active {
         background: var(--gray);
         color: var(--bg);
       }
+      #inforef {
+        font-size: 12px;
+        line-height: 20px;
+      }
       #inforef button {
         user-select: text;
+        color: var(--fg);
       }
     </style>
   </head>
@@ -157,6 +162,29 @@
           </button>
         </div>
       </div>
+    </div>
+
+    <div
+      id="keyboardref"
+      style="position: fixed; left: 16px; bottom: 16px; right: 16px; display: none; grid-template-columns: repeat(6, 1fr);"
+    >
+      <button>←</button>
+      <button>→</button>
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>r</button>
+      <button>↑</button>
+      <button>↓</button>
+      <button>o</button>
+      <button>p</button>
+      <button>d</button>
+      <button>e</button>
+      <button>+</button>
+      <button>-</button>
+      <button>z</button>
+      <button>?</button>
+      <button id="keyboard_shiftref" style="grid-column: span 2">sh</button>
     </div>
 
     <div
@@ -215,29 +243,6 @@
           >
         </p>
       </div>
-    </div>
-
-    <div
-      id="keyboard"
-      style="position: fixed; left: 16px; bottom: 16px; right: 16px; display: grid; grid-template-columns: repeat(6, 1fr);"
-    >
-      <button>←</button>
-      <button>→</button>
-      <button>1</button>
-      <button>2</button>
-      <button>3</button>
-      <button>r</button>
-      <button>↑</button>
-      <button>↓</button>
-      <button>o</button>
-      <button>p</button>
-      <button>d</button>
-      <button>e</button>
-      <button>+</button>
-      <button>-</button>
-      <button>z</button>
-      <button>?</button>
-      <button id="keyboard_shiftref" style="grid-column: span 2">sh</button>
     </div>
   </body>
   <script src="app.js"></script>

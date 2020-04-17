@@ -78,8 +78,15 @@ window.addEventListener('load', () => {
     info_state.width = 320
     info_state.position = [window.innerWidth - 320 - 16, 56]
   } else {
-    info_state.width = window.innerWidth - 24 * 2
     info_state.position = [24, 56]
+    info_state.width = window.innerWidth - 24 * 2
+  }
+
+  let keyboard_state = {}
+  if (window.innerWidth > 500) {
+    keyboard_state.active = false
+  } else {
+    keyboard_state.active = true
   }
 
   function setInfo() {
@@ -89,6 +96,12 @@ window.addEventListener('load', () => {
     $info.style.width = px(info_state.width)
   }
   setInfo()
+
+  let $keyboard = $('keyboard')
+  function setKeyboard() {
+    $keyboard.style.display = keyboard_state.active ? 'grid' : 'none'
+  }
+  setKeyboard()
 
   // set checker background
   let checker = document.createElement('canvas')
@@ -107,7 +120,10 @@ window.addEventListener('load', () => {
   function loadImage(src) {
     let ww = window.innerWidth - size * 1
     // let wh = window.innerHeight - size * 4
-    let wh = window.innerHeight - size * 4 - (56 * 3 + 16 * 2)
+    let wh =
+      window.innerHeight -
+      size * 4 -
+      (keyboard_state.active ? 56 * 3 + 16 * 2 : 0)
     let w_aspect = ww / wh
 
     let img = document.createElement('img')
@@ -718,7 +734,6 @@ window.addEventListener('load', () => {
   }
 
   let $keyboard_shift = $('keyboard_shift')
-  keyboard_state = {}
   keyboard_state.shift = false
 
   let $buttons = document.querySelectorAll('button')
