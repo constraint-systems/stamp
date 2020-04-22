@@ -523,14 +523,13 @@ window.addEventListener('load', () => {
       }
       input.addEventListener('change', handleChange)
 
-      input.click()
-      // input.dispatchEvent(
-      //   new MouseEvent('click', {
-      //     bubbles: true,
-      //     cancelable: true,
-      //     view: window,
-      //   })
-      // )
+      input.dispatchEvent(
+        new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+        })
+      )
     } else if (key === 'p') {
       let link = document.createElement('a')
       $cc.toBlob(function(blob) {
@@ -750,49 +749,52 @@ window.addEventListener('load', () => {
     let key = getButtonKey($button)
 
     $button.addEventListener('touchstart', function(e) {
-      touch.current = true
-      // keyboard shift special case
-      if (key === 'sh') {
-        if (keyboard_state.shift === true) {
-          keyboard_state.shift = false
-          $keyboard_shift.classList.remove('active')
-        } else {
-          keyboard_state.shift = true
-          $keyboard_shift.classList.add('active')
-        }
-      } else {
-        repeat_check = null
-        state.km[key] = true
-        keyAction(key, { shiftKey: false })
-        setTimeout(() => {
-          if (repeat_check === key) {
-            button_state.interval = setInterval(() => {
-              if (repeat_check === key) {
-                keyAction(key, { shiftKey: false })
-              } else {
-                clearInterval(button_state.interval)
-              }
-            }, 75)
+      // ios safari does not trigger file dialog with touchstart, so let that go through to mousedown
+      if (key !== 'o') {
+        touch.current = true
+        // keyboard shift special case
+        if (key === 'sh') {
+          if (keyboard_state.shift === true) {
+            keyboard_state.shift = false
+            $keyboard_shift.classList.remove('active')
+          } else {
+            keyboard_state.shift = true
+            $keyboard_shift.classList.add('active')
           }
-        }, 300)
-        repeat_check = key
-      }
-      function handleEnd() {
-        setTimeout(() => {
-          touch.current = false
-        }, 400)
-        state.km[key] = false
-        if (repeat_check === key) repeat_check = null
-        clearInterval(button_state.interval)
-        $button.removeEventListener('touchend', handleEnd)
-        $button.removeEventListener('touchcancel', handleEnd)
-      }
-      $button.addEventListener('touchcancel', handleEnd)
-      $button.addEventListener('touchend', handleEnd)
+        } else {
+          repeat_check = null
+          state.km[key] = true
+          keyAction(key, { shiftKey: false })
+          setTimeout(() => {
+            if (repeat_check === key) {
+              button_state.interval = setInterval(() => {
+                if (repeat_check === key) {
+                  keyAction(key, { shiftKey: false })
+                } else {
+                  clearInterval(button_state.interval)
+                }
+              }, 75)
+            }
+          }, 300)
+          repeat_check = key
+        }
+        function handleEnd() {
+          setTimeout(() => {
+            touch.current = false
+          }, 400)
+          state.km[key] = false
+          if (repeat_check === key) repeat_check = null
+          clearInterval(button_state.interval)
+          $button.removeEventListener('touchend', handleEnd)
+          $button.removeEventListener('touchcancel', handleEnd)
+        }
+        $button.addEventListener('touchcancel', handleEnd)
+        $button.addEventListener('touchend', handleEnd)
 
-      // prevent default prevents all mouse events
-      e.preventDefault()
-      e.stopPropagation()
+        // prevent default prevents all mouse events
+        e.preventDefault()
+        e.stopPropagation()
+      }
     })
 
     $button.addEventListener('mousedown', function() {
