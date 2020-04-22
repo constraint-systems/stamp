@@ -469,7 +469,7 @@ window.addEventListener('load', () => {
   }
 
   function keyAction(key, e) {
-    if (key === 'x') {
+    if (key === 'x' || key === 'escape') {
       info_state.active = false
       renderInfo()
     }
