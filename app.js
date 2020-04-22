@@ -523,13 +523,14 @@ window.addEventListener('load', () => {
       }
       input.addEventListener('change', handleChange)
 
-      input.dispatchEvent(
-        new MouseEvent('click', {
-          bubbles: true,
-          cancelable: true,
-          view: window,
-        })
-      )
+      input.click()
+      // input.dispatchEvent(
+      //   new MouseEvent('click', {
+      //     bubbles: true,
+      //     cancelable: true,
+      //     view: window,
+      //   })
+      // )
     } else if (key === 'p') {
       let link = document.createElement('a')
       $cc.toBlob(function(blob) {
