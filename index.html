@@ -123,7 +123,7 @@
   <body>
     <input type="file" id="fileinputref" style="display: none;" />
 
-    <div style="margin: 0 auto;">
+    <div style="margin: 0 auto; width: 300px;">
       <div class="flex" style="flex-wrap: wrap">
         <div style="margin-right: 16px;">
           <button>o</button> load image (or paste or drop)
@@ -133,7 +133,7 @@
       <div class="flex" style="flex-wrap: wrap">
         <div>
           <div id="canvastitleref" class="titlebar">canvas</div>
-          <div id="ccholderref" style="position: relative">
+          <div id="ccholderref" style="position: relative;  width: 300px;">
             <div id="checkerref"></div>
             <canvas id="ccref"></canvas>
             <canvas id="mccref"></canvas>
@@ -141,7 +141,7 @@
         </div>
         <div>
           <div id="sourcetitleref" class="titlebar">palette</div>
-          <div id="ocholderref" style="position: relative">
+          <div id="ocholderref" style="position: relative;  width: 300px;">
             <canvas id="ocref"></canvas>
             <canvas id="mocref"></canvas>
           </div>
@@ -197,7 +197,7 @@
 
     <div
       id="inforef"
-      style="position: absolute; left: 32px; top: 56px; width: 320px; outline: solid 1px var(--gray); background: var(--bg);"
+      style="position: absolute; left: calc(100% - 336px); top: 56px; width: 320px; outline: solid 1px var(--gray); background: var(--bg);"
     >
       <div class="titlebar active flex" style="">
         <div id="infobarref" style="flex-grow: 1">
